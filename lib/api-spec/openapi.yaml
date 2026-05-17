@@ -1,0 +1,695 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: ComptaSimple TPE API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+  - name: clients
+  - name: invoices
+  - name: devis
+  - name: expenses
+  - name: transactions
+  - name: bank
+  - name: company
+  - name: ai
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # ── Clients ──────────────────────────────────────────────
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all clients
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{id}:
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      summary: Delete a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+        "404":
+          description: Not found
+
+  # ── Invoices ─────────────────────────────────────────────
+  /invoices:
+    get:
+      operationId: listInvoices
+      tags: [invoices]
+      summary: List all invoices
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+    post:
+      operationId: createInvoice
+      tags: [invoices]
+      summary: Create an invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+
+  /invoices/{invoiceId}:
+    patch:
+      operationId: updateInvoice
+      tags: [invoices]
+      summary: Update an invoice
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+        "404":
+          description: Not found
+
+  # ── Devis ────────────────────────────────────────────────
+  /devis:
+    get:
+      operationId: listDevis
+      tags: [devis]
+      summary: List all devis
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Devis"
+    post:
+      operationId: createDevis
+      tags: [devis]
+      summary: Create a devis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DevisInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Devis"
+
+  /devis/{devisId}:
+    patch:
+      operationId: updateDevis
+      tags: [devis]
+      summary: Update a devis
+      parameters:
+        - name: devisId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DevisUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Devis"
+        "404":
+          description: Not found
+
+  # ── Expenses ─────────────────────────────────────────────
+  /expenses:
+    get:
+      operationId: listExpenses
+      tags: [expenses]
+      summary: List all expenses
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+    post:
+      operationId: createExpense
+      tags: [expenses]
+      summary: Create an expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+
+  # ── Transactions ─────────────────────────────────────────
+  /transactions:
+    get:
+      operationId: listTransactions
+      tags: [transactions]
+      summary: List all bank transactions
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+    post:
+      operationId: createTransaction
+      tags: [transactions]
+      summary: Create a transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+
+  /transactions/bulk:
+    post:
+      operationId: bulkCreateTransactions
+      tags: [transactions]
+      summary: Bulk create transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkTransactionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+
+  /transactions/{txId}:
+    patch:
+      operationId: updateTransaction
+      tags: [transactions]
+      summary: Update a transaction
+      parameters:
+        - name: txId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "404":
+          description: Not found
+
+  # ── Bank Account ─────────────────────────────────────────
+  /bank-account:
+    get:
+      operationId: getBankAccount
+      tags: [bank]
+      summary: Get the bank account
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+    put:
+      operationId: upsertBankAccount
+      tags: [bank]
+      summary: Create or update bank account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankAccountInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+
+  # ── Company ──────────────────────────────────────────────
+  /company:
+    get:
+      operationId: getCompany
+      tags: [company]
+      summary: Get company settings
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
+    put:
+      operationId: upsertCompany
+      tags: [company]
+      summary: Create or update company settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
+
+  /ai/chat:
+    post:
+      operationId: sendAiMessage
+      tags: [ai]
+      summary: Send a message to the AI accounting assistant (SSE stream)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiChatInput"
+      responses:
+        "200":
+          description: SSE stream of assistant text chunks
+          content:
+            text/event-stream: {}
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+
+    # ── Client ──────────────────────────────
+    Client:
+      type: object
+      required: [id, name, createdAt]
+      properties:
+        id:          { type: integer }
+        name:        { type: string }
+        email:       { type: ["string", "null"] }
+        siret:       { type: ["string", "null"] }
+        phone:       { type: ["string", "null"] }
+        address:     { type: ["string", "null"] }
+        city:        { type: ["string", "null"] }
+        postalCode:  { type: ["string", "null"] }
+        legalForm:   { type: ["string", "null"] }
+        website:     { type: ["string", "null"] }
+        iban:        { type: ["string", "null"] }
+        createdAt:   { type: string }
+    ClientInput:
+      type: object
+      required: [name]
+      properties:
+        name:        { type: string, minLength: 1 }
+        email:       { type: string }
+        siret:       { type: string }
+        phone:       { type: string }
+        address:     { type: string }
+        city:        { type: string }
+        postalCode:  { type: string }
+        legalForm:   { type: string }
+        website:     { type: string }
+        iban:        { type: string }
+    ClientUpdate:
+      type: object
+      properties:
+        name:        { type: string, minLength: 1 }
+        email:       { type: string }
+        siret:       { type: string }
+        phone:       { type: string }
+        address:     { type: string }
+        city:        { type: string }
+        postalCode:  { type: string }
+        legalForm:   { type: string }
+        website:     { type: string }
+        iban:        { type: string }
+
+    # ── Invoice ─────────────────────────────
+    Invoice:
+      type: object
+      required: [id, invoiceId, clientName, date, amountHT, vatRate, status, createdAt]
+      properties:
+        id:          { type: integer }
+        invoiceId:   { type: string }
+        clientName:  { type: string }
+        date:        { type: string }
+        amountHT:    { type: string }
+        vatRate:     { type: string }
+        status:      { type: string }
+        createdAt:   { type: string }
+    InvoiceInput:
+      type: object
+      required: [invoiceId, clientName, date, amountHT, vatRate]
+      properties:
+        invoiceId:   { type: string }
+        clientName:  { type: string }
+        date:        { type: string }
+        amountHT:    { type: string }
+        vatRate:     { type: string }
+        status:      { type: string }
+    InvoiceUpdate:
+      type: object
+      properties:
+        clientName:  { type: string }
+        date:        { type: string }
+        amountHT:    { type: string }
+        vatRate:     { type: string }
+        status:      { type: string }
+
+    # ── Devis ───────────────────────────────
+    DevisLine:
+      type: object
+      required: [id, description, quantity, unitPrice, unit, vatRate]
+      properties:
+        id:          { type: string }
+        description: { type: string }
+        quantity:    { type: number }
+        unitPrice:   { type: number }
+        unit:        { type: string }
+        vatRate:     { type: number }
+    Devis:
+      type: object
+      required: [id, devisId, clientName, subject, date, validUntil, lines, status, createdAt]
+      properties:
+        id:           { type: integer }
+        devisId:      { type: string }
+        clientName:   { type: string }
+        subject:      { type: string }
+        date:         { type: string }
+        validUntil:   { type: string }
+        lines:        { type: array, items: { $ref: "#/components/schemas/DevisLine" } }
+        notes:        { type: ["string", "null"] }
+        paymentTerms: { type: ["string", "null"] }
+        status:       { type: string }
+        createdAt:    { type: string }
+    DevisInput:
+      type: object
+      required: [devisId, clientName, subject, date, validUntil, lines]
+      properties:
+        devisId:      { type: string }
+        clientName:   { type: string }
+        subject:      { type: string }
+        date:         { type: string }
+        validUntil:   { type: string }
+        lines:        { type: array, items: { $ref: "#/components/schemas/DevisLine" } }
+        notes:        { type: string }
+        paymentTerms: { type: string }
+        status:       { type: string }
+    DevisUpdate:
+      type: object
+      properties:
+        clientName:   { type: string }
+        subject:      { type: string }
+        date:         { type: string }
+        validUntil:   { type: string }
+        lines:        { type: array, items: { $ref: "#/components/schemas/DevisLine" } }
+        notes:        { type: string }
+        paymentTerms: { type: string }
+        status:       { type: string }
+
+    # ── Expense ─────────────────────────────
+    Expense:
+      type: object
+      required: [id, expenseId, supplier, date, amountHT, vatRate, category, createdAt]
+      properties:
+        id:         { type: integer }
+        expenseId:  { type: string }
+        supplier:   { type: string }
+        date:       { type: string }
+        amountHT:   { type: string }
+        vatRate:    { type: string }
+        category:   { type: string }
+        createdAt:  { type: string }
+    ExpenseInput:
+      type: object
+      required: [expenseId, supplier, date, amountHT, vatRate]
+      properties:
+        expenseId:  { type: string }
+        supplier:   { type: string }
+        date:       { type: string }
+        amountHT:   { type: string }
+        vatRate:    { type: string }
+        category:   { type: string }
+
+    # ── Transaction ─────────────────────────
+    Transaction:
+      type: object
+      required: [id, txId, date, label, amount, type, createdAt]
+      properties:
+        id:           { type: integer }
+        txId:         { type: string }
+        date:         { type: string }
+        label:        { type: string }
+        amount:       { type: string }
+        type:         { type: string }
+        category:     { type: ["string", "null"] }
+        vatRate:      { type: ["string", "null"] }
+        documentName: { type: ["string", "null"] }
+        createdAt:    { type: string }
+    TransactionInput:
+      type: object
+      required: [txId, date, label, amount, type]
+      properties:
+        txId:         { type: string }
+        date:         { type: string }
+        label:        { type: string }
+        amount:       { type: string }
+        type:         { type: string }
+        category:     { type: string }
+        vatRate:      { type: string }
+        documentName: { type: string }
+    BulkTransactionInput:
+      type: object
+      required: [transactions]
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionInput"
+    TransactionUpdate:
+      type: object
+      properties:
+        category:     { type: string }
+        vatRate:      { type: ["string", "null"] }
+        documentName: { type: ["string", "null"] }
+
+    # ── BankAccount ─────────────────────────
+    BankAccount:
+      type: object
+      required: [id, name, iban, connected]
+      properties:
+        id:        { type: integer }
+        name:      { type: string }
+        iban:      { type: string }
+        connected: { type: boolean }
+        updatedAt: { type: string }
+    BankAccountInput:
+      type: object
+      required: [name, iban, connected]
+      properties:
+        name:      { type: string }
+        iban:      { type: string }
+        connected: { type: boolean }
+
+    # ── Company ─────────────────────────────
+    Company:
+      type: object
+      required: [id, name, legalForm, siret, vatNumber, address, postalCode, city, phone, email, website, iban]
+      properties:
+        id:          { type: integer }
+        name:        { type: string }
+        legalForm:   { type: string }
+        siret:       { type: string }
+        vatNumber:   { type: string }
+        address:     { type: string }
+        postalCode:  { type: string }
+        city:        { type: string }
+        phone:       { type: string }
+        email:       { type: string }
+        website:     { type: string }
+        iban:        { type: string }
+        logo:        { type: string }
+        updatedAt:   { type: string }
+    CompanyInput:
+      type: object
+      properties:
+        name:        { type: string }
+        legalForm:   { type: string }
+        siret:       { type: string }
+        vatNumber:   { type: string }
+        address:     { type: string }
+        postalCode:  { type: string }
+        city:        { type: string }
+        phone:       { type: string }
+        email:       { type: string }
+        website:     { type: string }
+        iban:        { type: string }
+        logo:        { type: string }
+
+    # ── AI ───────────────────────────────────
+    AiChatMessage:
+      type: object
+      required: [role, content]
+      properties:
+        role:    { type: string }
+        content: { type: string }
+    AiChatInput:
+      type: object
+      required: [messages]
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiChatMessage"
+        context:
+          type: object
